@@ -23,8 +23,7 @@ class CopilotApi
     {
         $this->setGithub($githubAccount);
         $this->getOrRefreshToken();
-        $this->prepareRules();
-
+        $this->setPromptFromArray(config('github-copilot-chat.rules'));
     }
 
     /**

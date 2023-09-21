@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SharedGithubAccounts extends BaseWidget
 {
-    protected int|string|array $columnSpan = 12;
+    protected int|string|array $columnSpan = 6;
 
     protected function getTableHeading(): string|Htmlable|null
     {

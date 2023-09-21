@@ -33,7 +33,7 @@
     <title>Chat</title>
 </head>
 
-<body data-urlprefix="{{ url('/')  }}">
+<body data-urlprefix="{{ url('/')  }}" data-avatar="{{ $avatar }}">
 <div class="main-container">
     <div class="box sidebar">
         <div class="top">
@@ -101,6 +101,18 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="field">
+                    <select class="dropdown" name="prompt" id="prompt">
+                        <option value="">{{_('Select Prompt')}}</option>
+                        @foreach($prompts as $prompt)
+                            <option value="{{ $prompt->id }}" @if($prompt->default) selected @endif>
+                                {{ $prompt->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="field checkbox">
                     <input type="checkbox" id="switch"/>
                     <label for="switch"></label>

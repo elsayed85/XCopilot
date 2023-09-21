@@ -2,34 +2,46 @@
 
 namespace App\Services\Copilot\Traits;
 
+use App\Models\Prompt;
+
 trait HasRules
 {
     use HasMessage;
 
-    private array $rules;
+    private Prompt $prompt;
 
-    private function setRules(array $rules): static
+    public function setPrompt(Prompt $prompt): self
     {
-        $this->rules = $rules;
+        $this->prompt = $prompt;
+
+        $rules = $prompt->getAllRulesAsString();
+
+        if (! empty($rules)) {
+            $this->addMessage($rules, 'system');
+        }
 
         return $this;
     }
 
-    private function getRulesString(): string
+    public function setPromptWhen(bool $when, Prompt $prompt = null): self
     {
-        $rules = '';
-
-        foreach ($this->rules as $rule) {
-            $rules .= $rule."\n";
+        if ($when) {
+            $this->setPrompt($prompt);
         }
 
-        return $rules;
+        return $this;
     }
 
-    private function prepareRules(): void
+    public function setPromptFromArray(array $rules): self
     {
-        $this->setRules(config('github-copilot-chat.rules'));
+        $rulesAsString = collect($rules)->map(function ($rule) {
+            return $rule;
+        })->implode("\n");
 
-        $this->addMessage($this->getRulesString(), 'system');
+        if (! empty($rulesAsString)) {
+            $this->addMessage($rulesAsString, 'system');
+        }
+
+        return $this;
     }
 }

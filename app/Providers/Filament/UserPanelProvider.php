@@ -37,7 +37,6 @@ class UserPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Blue,
             ])
-            ->topNavigation()
             ->navigationItems([
                 NavigationItem::make('')
                     ->label('Chat')
@@ -50,7 +49,6 @@ class UserPanelProvider extends PanelProvider
                     ->url(fn (): string => route('chat.index'))
                     ->icon('heroicon-o-chat-bubble-bottom-center-text'),
             ])
-            ->maxContentWidth('full')
             ->discoverResources(in: app_path('Filament/User/Resources'), for: 'App\\Filament\\User\\Resources')
             ->discoverPages(in: app_path('Filament/User/Pages'), for: 'App\\Filament\\User\\Pages')
             ->pages([
@@ -60,24 +58,14 @@ class UserPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
             ])
-            ->plugin(
+            ->plugins([
                 BreezyCore::make()
-                    ->myProfile(
-                        shouldRegisterNavigation: true,
-                        hasAvatars: true,
-                    )
-                    ->passwordUpdateRules(
-                        rules: [Password::default()->mixedCase()->uncompromised(3)],
-                    )
-                    ->enableTwoFactorAuthentication(
-                        force: false, // force the user to enable 2FA before they can use the application (default = false)
-                    )
-                    ->enableSanctumTokens(
-                        permissions : null
-                    )
-                    ->avatarUploadComponent(fn ($fileUpload) => $fileUpload->disableLabel())
-
-            )
+                    ->myProfile(shouldRegisterNavigation: true, hasAvatars: true)
+                    ->passwordUpdateRules(rules: [Password::default()->mixedCase()->uncompromised(3)])
+                    ->enableTwoFactorAuthentication()
+                    ->enableSanctumTokens(permissions : ['*'])
+                    ->avatarUploadComponent(fn ($fileUpload) => $fileUpload->disableLabel()),
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

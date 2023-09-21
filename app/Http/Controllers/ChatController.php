@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Copilot\CopilotApi;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,10 @@ class ChatController extends Controller
 
     public function index($chat = null, $conversation = null)
     {
+        $avatar = Filament::getUserAvatarUrl(auth()->user());
+
+        $prompts = auth()->user()->prompts()->get();
+
         $githubAccounts = auth()->user()->githubAccounts()->get();
         $sharedGithubAccounts = auth()->user()->sharedGithubAccounts()->get()
             ->map(function ($acc) {
@@ -32,6 +37,8 @@ class ChatController extends Controller
             'chat' => $chat,
             'conversation' => $conversation,
             'github_accounts' => $allAccounts,
+            'avatar' => $avatar,
+            'prompts' => $prompts,
         ]);
     }
 
@@ -52,13 +59,22 @@ class ChatController extends Controller
             return 'Not Authorized';
         }
 
+        $promptId = $request->input('prompt') ?? null;
+        $prompt = null;
+
+        if ($promptId) {
+            $prompt = auth()->user()->prompts()->where('id', $promptId)->first();
+        }
+
         $message = request()->input('meta.content.parts')[0];
         $conversation = request()->input('meta.content.conversation') ?? [];
 
         $conversation[] = $message;
 
         try {
-            $copilot = (new CopilotApi($githubAccount))->setMessages($conversation);
+            $copilot = (new CopilotApi($githubAccount))
+                ->setPromptWhen(! is_null($prompt), $prompt)
+                ->setMessages($conversation);
 
             return $copilot->streamResponse();
         } catch (\Exception $e) {

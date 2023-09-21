@@ -50,6 +50,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $this->belongsToMany(GithubAccount::class, (new GithubAccountMember())->getTable())->withPivot('id')->withTimestamps();
     }
 
+    public function prompts(): HasMany
+    {
+        return $this->hasMany(Prompt::class);
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return true;

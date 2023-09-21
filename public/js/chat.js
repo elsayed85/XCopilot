@@ -3,6 +3,7 @@ const query = (obj) =>
         .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(obj[k]))
         .join("&");
 const url_prefix = document.querySelector("body").getAttribute("data-urlprefix");
+const avatar_url = document.querySelector("body").getAttribute("data-avatar");
 const api_url = `${url_prefix}/main`;
 const markdown = window.markdownit();
 const message_box = document.getElementById(`messages`);
@@ -11,7 +12,7 @@ const box_conversations = document.querySelector(`.top`);
 const spinner = box_conversations.querySelector(".spinner");
 const stop_generating = document.querySelector(`.stop-generating`);
 const send_button = document.querySelector(`#send-button`);
-const user_image = `<img src="${url_prefix}/img/user.png" alt="User Avatar">`;
+const user_image = `<img src="${avatar_url}" alt="User Avatar">`;
 const gpt_image = `<img src="${url_prefix}/img/gpt.png" alt="GPT Avatar">`;
 let prompt_lock = false;
 
@@ -113,6 +114,7 @@ const ask_gpt = async (message) => {
                 conversation_id: window.conversation_id,
                 github_account_id: github_id,
                 shared :  parseInt(github_is_shared),
+                prompt : document.getElementById("prompt").value,
                 meta: {
                     id: window.token,
                     content: {
@@ -453,7 +455,7 @@ window.onload = async () => {
 };
 
 const register_settings_localstorage = async () => {
-    settings_ids = ["switch"];
+    settings_ids = ["switch" , 'github_account_id'];
     settings_elements = settings_ids.map((id) => document.getElementById(id));
     settings_elements.map((element) =>
         element.addEventListener(`change`, async (event) => {
@@ -472,7 +474,7 @@ const register_settings_localstorage = async () => {
 };
 
 const load_settings_localstorage = async () => {
-    settings_ids = ["switch"];
+    settings_ids = ["switch" , 'github_account_id'];
     settings_elements = settings_ids.map((id) => document.getElementById(id));
     settings_elements.map((element) => {
         if (localStorage.getItem(element.id)) {
