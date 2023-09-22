@@ -58,8 +58,6 @@ class CopilotApi
             )
         );
 
-        ray($delay);
-
         return response()->stream(function () use ($stream) {
             foreach ($stream as $response) {
                 usleep($delay ?? $this->delay);
