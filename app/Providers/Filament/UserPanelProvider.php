@@ -60,7 +60,7 @@ class UserPanelProvider extends PanelProvider
             ])
             ->plugins([
                 BreezyCore::make()
-                    ->myProfile(shouldRegisterNavigation: true, hasAvatars: true)
+                    ->myProfile(shouldRegisterNavigation: false, hasAvatars: true)
                     ->passwordUpdateRules(rules: [Password::default()->mixedCase()->uncompromised(3)])
                     ->enableTwoFactorAuthentication()
                     ->enableSanctumTokens(permissions : ['*'])
