@@ -118,6 +118,13 @@
                     <label for="switch"></label>
                     <span>{{_('Web Access')}}</span>
                 </div>
+
+                <div class="field">
+                    <input type="number" id="delay" value="10000" class="input" min="1000" max="60000" style="border: 1px solid #ccc; padding: 5px; width: 100px;background: #fff;"/>
+                    <span>
+                        {{_('Delay (ms)')}}
+                    </span>
+                </div>
             </div>
         </div>
     </div>

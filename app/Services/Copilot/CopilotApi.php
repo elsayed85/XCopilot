@@ -46,7 +46,7 @@ class CopilotApi
     /**
      * @throws \Exception
      */
-    public function streamResponse(): StreamedResponse
+    public function streamResponse($delay = null): StreamedResponse
     {
         if (empty($this->messages)) {
             throw new \Exception('Please add messages to send');
@@ -58,9 +58,11 @@ class CopilotApi
             )
         );
 
+        ray($delay);
+
         return response()->stream(function () use ($stream) {
             foreach ($stream as $response) {
-                usleep($this->delay);
+                usleep($delay ?? $this->delay);
                 $text = $response->choices[0]->content;
                 if (connection_aborted()) {
                     break;

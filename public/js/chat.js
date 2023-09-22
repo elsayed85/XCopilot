@@ -115,6 +115,7 @@ const ask_gpt = async (message) => {
                 github_account_id: github_id,
                 shared :  parseInt(github_is_shared),
                 prompt : document.getElementById("prompt").value,
+                delay : document.getElementById("delay").value,
                 meta: {
                     id: window.token,
                     content: {

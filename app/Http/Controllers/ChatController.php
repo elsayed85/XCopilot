@@ -69,6 +69,8 @@ class ChatController extends Controller
         $message = request()->input('meta.content.parts')[0];
         $conversation = request()->input('meta.content.conversation') ?? [];
 
+        $delay = request()->input('delay') ?? null;
+
         $conversation[] = $message;
 
         try {
@@ -76,7 +78,7 @@ class ChatController extends Controller
                 ->setPromptWhen(! is_null($prompt), $prompt)
                 ->setMessages($conversation);
 
-            return $copilot->streamResponse();
+            return $copilot->streamResponse($delay);
         } catch (\Exception $e) {
             return 'Error: '.$e->getMessage();
         }
